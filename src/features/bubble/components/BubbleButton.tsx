@@ -17,11 +17,11 @@ const defaultRight = 20;
 
 export const BubbleButton = (props: Props) => {
   const buttonSize = getBubbleButtonSize(props.size); // Default to 48px if no size is specified
-
   const [position, setPosition] = createSignal({
     bottom: props.bottom ?? defaultBottom,
     right: props.right ?? defaultRight,
   });
+  const [showPopup, setShowPopup] = createSignal(true); // Controls visibility of the popup
 
   let dragStartX: number;
   let initialRight: number;
@@ -39,11 +39,8 @@ export const BubbleButton = (props: Props) => {
   const onMouseMove = (e: MouseEvent) => {
     const deltaX = dragStartX - e.clientX;
     const newRight = initialRight + deltaX;
-
-    // Check if the new position is within the screen boundaries
     const screenWidth = window.innerWidth;
     const maxRight = screenWidth - buttonSize;
-
     const newPosition = {
       right: Math.min(Math.max(newRight, defaultRight), maxRight),
       bottom: position().bottom,
@@ -58,10 +55,15 @@ export const BubbleButton = (props: Props) => {
     document.removeEventListener('mouseup', onMouseUp);
   };
 
+  const handleClick = () => {
+    props.toggleBot(); // Call the original toggle function
+    setShowPopup(false); // Hide the popup message
+  };
+
   return (
     <button
       part="button"
-      onClick={() => props.toggleBot()}
+      onClick={handleClick}
       onMouseDown={onMouseDown}
       class={`fixed shadow-md rounded-full hover:scale-110 active:scale-95 transition-transform duration-200 flex justify-center items-center animate-fade-in`}
       style={{
@@ -74,11 +76,13 @@ export const BubbleButton = (props: Props) => {
         cursor: props.dragAndDrop ? 'grab' : 'pointer',
       }}
     >
-      {/* Always visible popup message */}
-      <div class="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-sm px-3 py-1 rounded">
-        Always Visible Popup Message
-      </div>
-
+      {/* Conditionally render the popup message based on showPopup state */}
+      <Show when={showPopup()}>
+        <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-sm px-3 py-1 rounded">
+          Click to interact!
+        </div>
+      </Show>
+      
       {/* SVG and Image icon display conditions */}
       <Show when={isNotDefined(props.customIconSrc)} keyed>
         <svg
