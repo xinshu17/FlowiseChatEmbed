@@ -85,8 +85,8 @@ export const BubbleButton = (props: Props) => {
             left: '50%',
             // transform: 'translateX(-50%)',
             width: '1000px', // Set the width of the popup
-            height: '200 px', // Adjust height as necessary, 'auto' for content-based height
-            'max-width': '90%', // Ensures the popup does not exceed the screen width on small devices
+            height: '20 px', // Adjust height as necessary, 'auto' for content-based height
+            // 'max-width': '90%', // Ensures the popup does not exceed the screen width on small devices
           }}
         >
           你好呀！我是小极速，你可以问我任何关于极速工作流的问题~
