@@ -57,7 +57,7 @@ export const BubbleButton = (props: Props) => {
 
   return (
     <button
-      ref={el => setButtonRef(el)}
+      ref={(el) => setButtonRef(el)}
       part="button"
       onClick={() => props.toggleBot()}
       onMouseDown={onMouseDown}
@@ -73,8 +73,11 @@ export const BubbleButton = (props: Props) => {
       }}
     >
       {/* Tooltip/Popup message always visible */}
-      <div class="absolute bg-white text-black text-sm px-4 py-2 rounded shadow-lg" style={{ bottom: `${buttonSize + 8}px`, left: `50%`, transform: 'translateX(-50%)' }}>
-        This is the bubble button tooltip!
+      <div
+        class="absolute bg-white text-black text-sm px-4 py-2 rounded shadow-lg"
+        style={{ bottom: `${buttonSize + 8}px`, left: `50%`, transform: 'translateX(-50%)' }}
+      >
+        你好呀！我是小极速，你可以问我任何关于极速工作流的问题~
       </div>
       {/* Icon rendering conditions */}
       <Show when={isNotDefined(props.customIconSrc)}>
