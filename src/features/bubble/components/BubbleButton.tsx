@@ -84,7 +84,7 @@ export const BubbleButton = (props: Props) => {
             top: '-200px', // Adjust this value to position the popup above the button
             left: '-1000px',
             // transform: 'translateX(-50%)',
-            width: '500', // Set the width of the popup
+            width: '200 px', // Set the width of the popup
             height: '1000 px', // Adjust height as necessary, 'auto' for content-based height
             // 'max-width': '90%', // Ensures the popup does not exceed the screen width on small devices
           }}
