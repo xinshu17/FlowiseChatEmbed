@@ -93,8 +93,8 @@ export const BubbleButton = (props: Props) => {
           src={props.customIconSrc}
           class={'rounded-full object-cover' + (props.isBotOpened ? 'scale-0 opacity-0' : 'scale-100 opacity-100')}
           style={{
-            width: `${buttonSize * 0.6}px`,
-            height: `${buttonSize * 0.6}px`,
+            width: `${buttonSize * 1}px`,
+            height: `${buttonSize * 1}px`,
           }}
           alt="Bubble button icon"
         />
