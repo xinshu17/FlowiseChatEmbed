@@ -1,5 +1,4 @@
-import { createSignal, createEffect, onCleanup } from 'solid-js';
-import { Show } from 'solid-js';
+import { createSignal, Show } from 'solid-js';
 import { isNotDefined, getBubbleButtonSize } from '@/utils/index';
 import { ButtonTheme } from '../types';
 
@@ -21,11 +20,10 @@ export const BubbleButton = (props: Props) => {
     bottom: props.bottom ?? defaultBottom,
     right: props.right ?? defaultRight,
   });
-  const [showTooltip, setShowTooltip] = createSignal(false);
 
   let dragStartX: number;
   let initialRight: number;
-  let buttonRef: HTMLButtonElement;
+  const [buttonRef, setButtonRef] = createSignal();
 
   const onMouseDown = (e: MouseEvent) => {
     if (props.dragAndDrop) {
@@ -57,21 +55,9 @@ export const BubbleButton = (props: Props) => {
     document.removeEventListener('mouseup', onMouseUp);
   };
 
-  const onMouseEnter = () => setShowTooltip(true);
-  const onMouseLeave = () => setShowTooltip(false);
-
-  createEffect(() => {
-    buttonRef.addEventListener('mouseenter', onMouseEnter);
-    buttonRef.addEventListener('mouseleave', onMouseLeave);
-    onCleanup(() => {
-      buttonRef.removeEventListener('mouseenter', onMouseEnter);
-      buttonRef.removeEventListener('mouseleave', onMouseLeave);
-    });
-  });
-
   return (
     <button
-      ref={buttonRef}
+      ref={el => setButtonRef(el)}
       part="button"
       onClick={() => props.toggleBot()}
       onMouseDown={onMouseDown}
@@ -86,14 +72,12 @@ export const BubbleButton = (props: Props) => {
         cursor: props.dragAndDrop ? 'grab' : 'pointer',
       }}
     >
-      {/* Tooltip/Popup message */}
-      <Show when={showTooltip()}>
-        <div class="absolute bg-white text-black text-sm px-4 py-2 rounded shadow-lg" style={{ bottom: `${buttonSize + 8}px`, left: `50%`, transform: 'translateX(-50%)' }}>
-          This is the bubble button tooltip!
-        </div>
-      </Show>
+      {/* Tooltip/Popup message always visible */}
+      <div class="absolute bg-white text-black text-sm px-4 py-2 rounded shadow-lg" style={{ bottom: `${buttonSize + 8}px`, left: `50%`, transform: 'translateX(-50%)' }}>
+        This is the bubble button tooltip!
+      </div>
       {/* Icon rendering conditions */}
-      <Show when={isNotDefined(props.customIconSrc)} keyed>
+      <Show when={isNotDefined(props.customIconSrc)}>
         <svg
           viewBox="0 0 24 24"
           style={{
