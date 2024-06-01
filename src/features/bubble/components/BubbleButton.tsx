@@ -81,7 +81,7 @@ export const BubbleButton = (props: Props) => {
           style={{
             stroke: 'props.iconColor' ?? defaultIconColor,
           }}
-          class={`stroke-2 fill-transparent absolute duration-200 transition ` + (props.isBotOpened ? 'scale-0 opacity-0' : 'scale-100 opacity-100')}
+          class={`stroke-2 fill-transparent absolute duration-200 transition ` + (props.isBotOpened ? 'scale-0 opacity-0' : 'scale-100 opacity-0')}
           width={buttonSize * 0.6}
           height={buttonSize * 0.6}
         >
@@ -91,7 +91,7 @@ export const BubbleButton = (props: Props) => {
       <Show when={props.customIconSrc}>
         <img
           src={props.customIconSrc}
-          class={'rounded-full object-cover' + (props.isBotOpened ? 'scale-0 opacity-0' : 'scale-100 opacity-100')}
+          class={'rounded-full object-cover' + (props.isBotOpened ? 'scale-0 opacity-0' : 'scale-100 opacity-0')}
           style={{
             width: `${buttonSize * 1}px`,
             height: `${buttonSize * 1}px`,
