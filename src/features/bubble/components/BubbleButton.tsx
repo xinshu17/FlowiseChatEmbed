@@ -1,4 +1,4 @@
-import { createSignal } from 'solid-js';
+import { createSignal, createEffect, onCleanup } from 'solid-js';
 import { Show } from 'solid-js';
 import { isNotDefined, getBubbleButtonSize } from '@/utils/index';
 import { ButtonTheme } from '../types';
@@ -6,8 +6,8 @@ import { ButtonTheme } from '../types';
 type Props = ButtonTheme & {
   isBotOpened: boolean;
   toggleBot: () => void;
-  setButtonPosition: (position: { bottom: number; right: number }) => void; // New prop for updating position
-  dragAndDrop: boolean; // Ensure dragAndDrop prop is passed
+  setButtonPosition: (position: { bottom: number; right: number }) => void;
+  dragAndDrop: boolean;
 };
 
 const defaultButtonColor = '#3B81F6';
@@ -16,15 +16,16 @@ const defaultBottom = 20;
 const defaultRight = 20;
 
 export const BubbleButton = (props: Props) => {
-  const buttonSize = getBubbleButtonSize(props.size); // Default to 48px if no size is specified
-
+  const buttonSize = getBubbleButtonSize(props.size);
   const [position, setPosition] = createSignal({
     bottom: props.bottom ?? defaultBottom,
     right: props.right ?? defaultRight,
   });
+  const [showTooltip, setShowTooltip] = createSignal(false);
 
   let dragStartX: number;
   let initialRight: number;
+  let buttonRef: HTMLButtonElement;
 
   const onMouseDown = (e: MouseEvent) => {
     if (props.dragAndDrop) {
@@ -39,18 +40,16 @@ export const BubbleButton = (props: Props) => {
   const onMouseMove = (e: MouseEvent) => {
     const deltaX = dragStartX - e.clientX;
     const newRight = initialRight + deltaX;
-
-    // Check if the new position is within the screen boundaries
     const screenWidth = window.innerWidth;
     const maxRight = screenWidth - buttonSize;
 
     const newPosition = {
-      right: Math.min(Math.max(newRight, defaultRight), maxRight),
+      right: Math.min(Math.max(newRight, 0), maxRight),
       bottom: position().bottom,
     };
 
     setPosition(newPosition);
-    props.setButtonPosition(newPosition); // Update parent component's state
+    props.setButtonPosition(newPosition);
   };
 
   const onMouseUp = () => {
@@ -58,15 +57,28 @@ export const BubbleButton = (props: Props) => {
     document.removeEventListener('mouseup', onMouseUp);
   };
 
+  const onMouseEnter = () => setShowTooltip(true);
+  const onMouseLeave = () => setShowTooltip(false);
+
+  createEffect(() => {
+    buttonRef.addEventListener('mouseenter', onMouseEnter);
+    buttonRef.addEventListener('mouseleave', onMouseLeave);
+    onCleanup(() => {
+      buttonRef.removeEventListener('mouseenter', onMouseEnter);
+      buttonRef.removeEventListener('mouseleave', onMouseLeave);
+    });
+  });
+
   return (
     <button
+      ref={buttonRef}
       part="button"
       onClick={() => props.toggleBot()}
       onMouseDown={onMouseDown}
       class={`fixed shadow-md rounded-full hover:scale-110 active:scale-95 transition-transform duration-200 flex justify-center items-center animate-fade-in`}
       style={{
         'background-color': props.backgroundColor ?? defaultButtonColor,
-        'z-index': 42424242,
+        'z-index': '42424242',
         right: `${position().right}px`,
         bottom: `${position().bottom}px`,
         width: `${buttonSize}px`,
@@ -74,6 +86,13 @@ export const BubbleButton = (props: Props) => {
         cursor: props.dragAndDrop ? 'grab' : 'pointer',
       }}
     >
+      {/* Tooltip/Popup message */}
+      <Show when={showTooltip()}>
+        <div class="absolute bg-white text-black text-sm px-4 py-2 rounded shadow-lg" style={{ bottom: `${buttonSize + 8}px`, left: `50%`, transform: 'translateX(-50%)' }}>
+          This is the bubble button tooltip!
+        </div>
+      </Show>
+      {/* Icon rendering conditions */}
       <Show when={isNotDefined(props.customIconSrc)} keyed>
         <svg
           viewBox="0 0 24 24"
@@ -98,20 +117,6 @@ export const BubbleButton = (props: Props) => {
           alt="Bubble button icon"
         />
       </Show>
-
-      <svg
-        viewBox="0 0 24 24"
-        style={{ fill: props.iconColor ?? 'white' }}
-        class={`absolute duration-200 transition ` + (props.isBotOpened ? 'scale-100 rotate-0 opacity-100' : 'scale-0 -rotate-180 opacity-0')}
-        width={buttonSize * 0.6}
-        height={buttonSize * 0.6}
-      >
-        <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
-          d="M18.601 8.39897C18.269 8.06702 17.7309 8.06702 17.3989 8.39897L12 13.7979L6.60099 8.39897C6.26904 8.06702 5.73086 8.06702 5.39891 8.39897C5.06696 8.73091 5.06696 9.2691 5.39891 9.60105L11.3989 15.601C11.7309 15.933 12.269 15.933 12.601 15.601L18.601 9.60105C18.9329 9.2691 18.9329 8.73091 18.601 8.39897Z"
-        />
-      </svg>
     </button>
   );
 };
