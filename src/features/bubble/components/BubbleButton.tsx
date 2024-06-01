@@ -24,7 +24,6 @@ export const BubbleButton = (props: Props) => {
   });
   const [showPopup, setShowPopup] = createSignal(true); // Controls visibility of the popup
 
-
   let dragStartX: number;
   let initialRight: number;
 
@@ -110,6 +109,7 @@ export const BubbleButton = (props: Props) => {
             // transform: 'translateX(-50%)',
             width: '200 px', // Set the width of the popup
             height: 'auto', // Adjust height as necessary, 'auto' for content-based height
+            "line-height": '1.5',
             // 'max-width': '90%', // Ensures the popup does not exceed the screen width on small devices
           }}
         >
