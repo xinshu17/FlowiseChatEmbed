@@ -81,15 +81,15 @@ export const BubbleButton = (props: Props) => {
         <div
           class="absolute bg-gray-800 text-white text-sm px-3 py-1 rounded"
           style={{
-            top: '-200px', // Adjust this value to position the popup above the button
-            left: '-1000px',
+            top: '-50px', // Adjust this value to position the popup above the button
+            left: '-500px',
             // transform: 'translateX(-50%)',
             width: '200 px', // Set the width of the popup
-            height: '1000 px', // Adjust height as necessary, 'auto' for content-based height
+            height: 'auto', // Adjust height as necessary, 'auto' for content-based height
             // 'max-width': '90%', // Ensures the popup does not exceed the screen width on small devices
           }}
         >
-          你好呀！我是小极速，你可以问我任何关于极速工作流的问题~
+          你好呀！我是小极速，你可以<br></br>问我任何关于极速工作流的问<br></br>题~
         </div>
       </Show>
 
