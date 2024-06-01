@@ -93,7 +93,7 @@ export const BubbleButton = (props: Props) => {
       <Show when={props.customIconSrc}>
         <img
           src={props.customIconSrc}
-          class={'rounded-full object-cover' + (props.isBotOpened ? 'scale-0 opacity-0' : 'scale-100 opacity-100')}
+          class={'rounded-full object-cover' + (props.isBotOpened ? 'scale-100 opacity-100' : 'scale-100 opacity-100')}
           style={{
             width: `${buttonSize * 1}px`,
             height: `${buttonSize * 1}px`,
