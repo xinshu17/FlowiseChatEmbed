@@ -78,7 +78,16 @@ export const BubbleButton = (props: Props) => {
       }}
     >
       <Show when={showPopup()}>
-        <div class="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-sm px-3 py-1 rounded"> 你好呀！我是小极速，你可以问我任何关于极速工作流的问题~ </div>
+        <div class="absolute bg-gray-800 text-white text-sm px-3 py-1 rounded" style={{
+            top: '-50px', // Adjust this value to position the popup above the button
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '200px', // Set the width of the popup
+            height: 'auto', // Adjust height as necessary, 'auto' for content-based height
+            'max-width': '90%', // Ensures the popup does not exceed the screen width on small devices
+          }}>
+          你好呀！我是小极速，你可以问我任何关于极速工作流的问题~
+        </div>
       </Show>
 
       {/* SVG and Image icon display conditions remain unchanged */}
