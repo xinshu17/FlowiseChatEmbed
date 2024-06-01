@@ -6,8 +6,8 @@ import { ButtonTheme } from '../types';
 type Props = ButtonTheme & {
   isBotOpened: boolean;
   toggleBot: () => void;
-  setButtonPosition: (position: { bottom: number; right: number }) => void;
-  dragAndDrop: boolean;
+  setButtonPosition: (position: { bottom: number; right: number }) => void; // New prop for updating position
+  dragAndDrop: boolean; // Ensure dragAndDrop prop is passed
 };
 
 const defaultButtonColor = '#3B81F6';
@@ -17,11 +17,13 @@ const defaultRight = 20;
 
 export const BubbleButton = (props: Props) => {
   const buttonSize = getBubbleButtonSize(props.size); // Default to 48px if no size is specified
+
   const [position, setPosition] = createSignal({
     bottom: props.bottom ?? defaultBottom,
     right: props.right ?? defaultRight,
   });
   const [showPopup, setShowPopup] = createSignal(true); // Controls visibility of the popup
+
 
   let dragStartX: number;
   let initialRight: number;
@@ -39,6 +41,8 @@ export const BubbleButton = (props: Props) => {
   const onMouseMove = (e: MouseEvent) => {
     const deltaX = dragStartX - e.clientX;
     const newRight = initialRight + deltaX;
+
+    // Check if the new position is within the screen boundaries
     const screenWidth = window.innerWidth;
     const maxRight = screenWidth - buttonSize;
 
@@ -56,15 +60,10 @@ export const BubbleButton = (props: Props) => {
     document.removeEventListener('mouseup', onMouseUp);
   };
 
-  const handleClick = () => {
-    props.toggleBot(); // Call the original toggle function
-    setShowPopup(false); // Hide the popup message
-  };
-
   return (
     <button
       part="button"
-      onClick={handleClick}
+      onClick={() => props.toggleBot()}
       onMouseDown={onMouseDown}
       class={`fixed shadow-md rounded-full hover:scale-110 active:scale-95 transition-transform duration-200 flex justify-center items-center animate-fade-in`}
       style={{
@@ -77,28 +76,6 @@ export const BubbleButton = (props: Props) => {
         cursor: props.dragAndDrop ? 'grab' : 'pointer',
       }}
     >
-      <Show when={showPopup()}>
-        <div
-          class="absolute bg-gray-800 text-white text-sm px-3 py-1 rounded"
-          style={{
-            'text-align': 'left', // Correctly using camelCase and colon for property definition
-            top: '-70px', // Adjust this value to position the popup above the button
-            left: '-170px',
-            // transform: 'translateX(-50%)',
-            width: '200 px', // Set the width of the popup
-            height: 'auto', // Adjust height as necessary, 'auto' for content-based height
-            // 'max-width': '90%', // Ensures the popup does not exceed the screen width on small devices
-          }}
-        >
-          你好呀！我是小极速，你可以
-          <br />
-          问我任何关于极速工作流的问
-          <br />
-          题~
-        </div>
-      </Show>
-
-      {/* SVG and Image icon display conditions remain unchanged */}
       <Show when={isNotDefined(props.customIconSrc)} keyed>
         <svg
           viewBox="0 0 24 24"
@@ -123,6 +100,40 @@ export const BubbleButton = (props: Props) => {
           alt="Bubble button icon"
         />
       </Show>
+      <Show when={showPopup()}>
+        <div
+          class="absolute bg-gray-800 text-white text-sm px-3 py-1 rounded"
+          style={{
+            'text-align': 'left', // Correctly using camelCase and colon for property definition
+            top: '-70px', // Adjust this value to position the popup above the button
+            left: '-170px',
+            // transform: 'translateX(-50%)',
+            width: '200 px', // Set the width of the popup
+            height: 'auto', // Adjust height as necessary, 'auto' for content-based height
+            // 'max-width': '90%', // Ensures the popup does not exceed the screen width on small devices
+          }}
+        >
+          你好呀！我是小极速，你可以
+          <br />
+          问我任何关于极速工作流的问
+          <br />
+          题~
+        </div>
+      </Show>
+
+      <svg
+        viewBox="0 0 24 24"
+        style={{ fill: props.iconColor ?? 'white' }}
+        class={`absolute duration-200 transition ` + (props.isBotOpened ? 'scale-100 rotate-0 opacity-100' : 'scale-0 -rotate-180 opacity-0')}
+        width={buttonSize * 0.6}
+        height={buttonSize * 0.6}
+      >
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M18.601 8.39897C18.269 8.06702 17.7309 8.06702 17.3989 8.39897L12 13.7979L6.60099 8.39897C6.26904 8.06702 5.73086 8.06702 5.39891 8.39897C5.06696 8.73091 5.06696 9.2691 5.39891 9.60105L11.3989 15.601C11.7309 15.933 12.269 15.933 12.601 15.601L18.601 9.60105C18.9329 9.2691 18.9329 8.73091 18.601 8.39897Z"
+        />
+      </svg>
     </button>
   );
 };
