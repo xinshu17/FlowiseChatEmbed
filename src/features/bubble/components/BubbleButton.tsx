@@ -16,12 +16,12 @@ const defaultBottom = 20;
 const defaultRight = 20;
 
 export const BubbleButton = (props: Props) => {
-  const buttonSize = getBubbleButtonSize(props.size);
+  const buttonSize = getBubbleButtonSize(props.size); // Default to 48px if no size is specified
   const [position, setPosition] = createSignal({
     bottom: props.bottom ?? defaultBottom,
     right: props.right ?? defaultRight,
   });
-  const [showPopup, setShowPopup] = createSignal(true);  // Popup visibility control
+  const [showPopup, setShowPopup] = createSignal(true); // Controls visibility of the popup
 
   let dragStartX: number;
   let initialRight: number;
@@ -30,6 +30,7 @@ export const BubbleButton = (props: Props) => {
     if (props.dragAndDrop) {
       dragStartX = e.clientX;
       initialRight = position().right;
+
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp);
     }
@@ -40,12 +41,14 @@ export const BubbleButton = (props: Props) => {
     const newRight = initialRight + deltaX;
     const screenWidth = window.innerWidth;
     const maxRight = screenWidth - buttonSize;
+
     const newPosition = {
       right: Math.min(Math.max(newRight, defaultRight), maxRight),
       bottom: position().bottom,
     };
+
     setPosition(newPosition);
-    props.setButtonPosition(newPosition);
+    props.setButtonPosition(newPosition); // Update parent component's state
   };
 
   const onMouseUp = () => {
@@ -54,8 +57,8 @@ export const BubbleButton = (props: Props) => {
   };
 
   const handleClick = () => {
-    props.toggleBot();  // Invoke the original toggle function
-    setShowPopup(false);  // Hide the popup message permanently after click
+    props.toggleBot(); // Call the original toggle function
+    setShowPopup(false); // Hide the popup message
   };
 
   return (
@@ -80,6 +83,7 @@ export const BubbleButton = (props: Props) => {
         </div>
       </Show>
 
+      {/* SVG and Image icon display conditions remain unchanged */}
       <Show when={isNotDefined(props.customIconSrc)} keyed>
         <svg
           viewBox="0 0 24 24"
