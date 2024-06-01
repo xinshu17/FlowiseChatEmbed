@@ -6,8 +6,8 @@ import { ButtonTheme } from '../types';
 type Props = ButtonTheme & {
   isBotOpened: boolean;
   toggleBot: () => void;
-  setButtonPosition: (position: { bottom: number; right: number }) => void; // New prop for updating position
-  dragAndDrop: boolean; // Ensure dragAndDrop prop is passed
+  setButtonPosition: (position: { bottom: number; right: number }) => void;
+  dragAndDrop: boolean;
 };
 
 const defaultButtonColor = '#3B81F6';
@@ -74,11 +74,12 @@ export const BubbleButton = (props: Props) => {
         cursor: props.dragAndDrop ? 'grab' : 'pointer',
       }}
     >
-      {/* Persistent Popup Message */}
-      <div class="absolute bg-white text-black text-sm px-4 py-2 rounded shadow-lg" style={{ bottom: `${buttonSize + 8}px`, left: `50%`, transform: 'translateX(-50%)' }}>
-        This is the bubble button tooltip!
+      {/* Always visible popup message */}
+      <div class="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-sm px-3 py-1 rounded">
+        Always Visible Popup Message
       </div>
 
+      {/* SVG and Image icon display conditions */}
       <Show when={isNotDefined(props.customIconSrc)} keyed>
         <svg
           viewBox="0 0 24 24"
