@@ -78,9 +78,7 @@ export const BubbleButton = (props: Props) => {
       }}
     >
       <Show when={showPopup()}>
-        <div class="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-sm px-3 py-1 rounded">
-          Tap to interact!
-        </div>
+        <div class="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-sm px-3 py-1 rounded"> 你好呀！我是小极速，你可以问我任何关于极速工作流的问题~ </div>
       </Show>
 
       {/* SVG and Image icon display conditions remain unchanged */}
